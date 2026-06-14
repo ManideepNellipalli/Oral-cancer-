@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oral Cancer Detection | CNN & ViT</title>
+  <style>
+    :root {
+      --primary: #1a73e8;
+      --accent: #0d47a1;
+      --bg: #f8f9fa;
+      --card: #ffffff;
+      --text: #202124;
+      --muted: #5f6368;
+      --border: #e0e0e0;
+      --green: #34a853;
+      --red: #ea4335;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #0d47a1 0%, #1a73e8 60%, #42a5f5 100%);
+      color: white;
+      padding: 80px 24px 60px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .hero p {
+      font-size: 18px;
+      opacity: 0.88;
+      max-width: 640px;
+      margin: 0 auto 32px;
+    }
+    .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: inline-block;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn-white { background: white; color: var(--primary); }
+    .btn-outline { background: transparent; color: white; border: 2px solid white; }
+
+    /* BADGES */
+    .badges {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 24px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+    }
+    .badge {
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+    }
+    .badge.python   { background: #3572A5; }
+    .badge.tf       { background: #FF6F00; }
+    .badge.keras    { background: #D00000; }
+    .badge.sklearn  { background: #F7931E; color: #333; }
+    .badge.status   { background: var(--green); }
+
+    /* SECTION */
+    .section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 64px 24px;
+    }
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .section-subtitle {
+      color: var(--muted);
+      margin-bottom: 36px;
+      font-size: 15px;
+    }
+
+    /* CARDS GRID */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .card-icon { font-size: 32px; margin-bottom: 12px; }
+    .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .card p { font-size: 14px; color: var(--muted); }
+
+    /* RESULTS TABLE */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .results-table thead { background: var(--primary); color: white; }
+    .results-table th, .results-table td {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 14px;
+    }
+    .results-table tbody tr:nth-child(even) { background: #f1f3f4; }
+    .results-table tbody tr:hover { background: #e8f0fe; }
+    .acc { font-weight: 700; color: var(--green); }
+
+    /* ARCHITECTURE */
+    .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 640px) { .arch-grid { grid-template-columns: 1fr; } }
+    .arch-box {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      border-radius: 12px;
+      padding: 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .arch-box h4 { color: #89b4fa; margin-bottom: 16px; font-size: 15px; }
+    .arch-box .layer { color: #a6e3a1; }
+    .arch-box .arrow { color: #f38ba8; }
+
+    /* TECH STACK */
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px; }
+    .tech-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .tech-item span { display: block; font-size: 26px; margin-bottom: 8px; }
+
+    /* STEPS */
+    .steps { display: flex; flex-direction: column; gap: 20px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; }
+    .step-num {
+      width: 36px; height: 36px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px;
+      flex-shrink: 0;
+    }
+    .step-body h4 { font-size: 15px; margin-bottom: 4px; }
+    .step-body p { font-size: 14px; color: var(--muted); }
+    .code-block {
+      background: #1e1e2e;
+      color: #a6e3a1;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: monospace;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    /* FUTURE */
+    .future-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .future-list li {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 14px;
+    }
+    .future-list li::before {
+      content: "→";
+      color: var(--primary);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      text-align: center;
+      padding: 40px 24px;
+      font-size: 14px;
+    }
+    footer a { color: #89b4fa; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+    /* DIVIDER */
+    .divider { border: none; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">🔬 Medical Imaging · Deep Learning</div>
+    <h1>Oral Cancer Detection<br>CNN & Vision Transformer</h1>
+    <p>Binary image classification of oral cancer using a custom CNN baseline and a Vision Transformer (ViT) built from scratch in TensorFlow/Keras.</p>
+    <div class="hero-btns">
+      <a href="https://github.com/your-username/oral-cancer-detection" class="btn btn-white">📂 View on GitHub</a>
+      <a href="https://www.kaggle.com" class="btn btn-outline">📓 Open in Kaggle</a>
+    </div>
+  </section>
+
+  <!-- BADGES -->
+  <div class="badges">
+    <span class="badge python">Python 3.10</span>
+    <span class="badge tf">TensorFlow 2.x</span>
+    <span class="badge keras">Keras</span>
+    <span class="badge sklearn">Scikit-learn</span>
+    <span class="badge status">✓ Complete</span>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section">
+    <div class="section-title">📖 Project Overview</div>
+    <div class="section-subtitle">Early detection of oral cancer using deep learning on lip and tongue images</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>Objective</h3>
+        <p>Automate binary classification of oral images into <strong>cancer</strong> and <strong>non-cancer</strong> categories to assist early clinical screening.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h3>Two Architectures</h3>
+        <p>Baseline custom CNN with regularization, and a Vision Transformer (ViT) built entirely from scratch using patch embeddings and multi-head attention.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚖️</div>
+        <h3>Imbalanced Data Handling</h3>
+        <p>Sklearn class weight balancing and data augmentation (flip, rotation, zoom) applied to improve generalization on a small 131-image dataset.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Evaluation</h3>
+        <p>Confusion matrix, accuracy curves, and training/validation loss plots to monitor performance and detect overfitting.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- RESULTS -->
+  <div class="section">
+    <div class="section-title">📊 Results</div>
+    <div class="section-subtitle">Performance comparison across architectures</div>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Optimizer</th>
+          <th>Loss</th>
+          <th>Training Accuracy</th>
+          <th>Best Val Accuracy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Custom CNN (Baseline)</td>
+          <td>Adam</td>
+          <td>Binary Cross-Entropy</td>
+          <td>~99–100%</td>
+          <td class="acc">~93%</td>
+        </tr>
+        <tr>
+          <td>Vision Transformer (ViT)</td>
+          <td>Adam</td>
+          <td>Binary Cross-Entropy</td>
+          <td>—</td>
+          <td class="acc">In Progress</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:16px; font-size:13px; color:var(--muted);">
+      ⚠️ Note: High training accuracy with fluctuating validation accuracy reflects overfitting on a small dataset (131 images). Transfer learning would significantly improve generalization.
+    </p>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ARCHITECTURES -->
+  <div class="section">
+    <div class="section-title">🏗️ Model Architectures</div>
+    <div class="section-subtitle">Custom CNN baseline and ViT from scratch</div>
+    <div class="arch-grid">
+      <div class="arch-box">
+        <h4>🔷 Baseline CNN</h4>
+        <span class="layer">Input</span> (240×240×3)<br>
+        <span class="arrow">↓</span> Conv2D(32, 3×3, stride=2) + ReLU<br>
+        <span class="arrow">↓</span> MaxPooling2D(2×2)<br>
+        <span class="arrow">↓</span> Conv2D(32, 3×3, stride=2) + ReLU<br>
+        <span class="arrow">↓</span> MaxPooling2D(2×2)<br>
+        <span class="arrow">↓</span> Flatten<br>
+        <span class="arrow">↓</span> Dense(64) + L1L2 + Dropout(0.5)<br>
+        <span class="arrow">↓</span> <span class="layer">Dense(1) + Sigmoid</span>
+      </div>
+      <div class="arch-box">
+        <h4>🔶 Vision Transformer (ViT)</h4>
+        <span class="layer">Input</span> (224×224×3)<br>
+        <span class="arrow">↓</span> Data Augmentation<br>
+        <span class="arrow">↓</span> Patch Extraction (16×16 → 196 patches)<br>
+        <span class="arrow">↓</span> Linear Projection + Positional Embeddings<br>
+        <span class="arrow">↓</span> Transformer Encoder × 8 layers<br>
+        &nbsp;&nbsp; (MHA → LayerNorm → MLP → LayerNorm)<br>
+        <span class="arrow">↓</span> MLP Head (2048 → 1024)<br>
+        <span class="arrow">↓</span> <span class="layer">Dense(1) + Sigmoid</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- TECH STACK -->
+  <div class="section">
+    <div class="section-title">🛠️ Technologies Used</div>
+    <div class="section-subtitle">Libraries and frameworks powering this project</div>
+    <div class="tech-grid">
+      <div class="tech-item"><span>🐍</span>Python 3.10</div>
+      <div class="tech-item"><span>🔶</span>TensorFlow</div>
+      <div class="tech-item"><span>🔴</span>Keras</div>
+      <div class="tech-item"><span>🔢</span>NumPy</div>
+      <div class="tech-item"><span>📸</span>OpenCV</div>
+      <div class="tech-item"><span>📈</span>Matplotlib</div>
+      <div class="tech-item"><span>🎨</span>Seaborn</div>
+      <div class="tech-item"><span>🤖</span>Scikit-learn</div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- USAGE -->
+  <div class="section">
+    <div class="section-title">⚙️ Quick Start</div>
+    <div class="section-subtitle">Get the project running locally in 4 steps</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Clone the repository</h4>
+          <div class="code-block">git clone https://github.com/your-username/oral-cancer-detection.git</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Install dependencies</h4>
+          <div class="code-block">pip install tensorflow tensorflow-addons visualkeras scikit-learn opencv-python matplotlib seaborn</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Download the dataset from Kaggle</h4>
+          <p>Place dataset under <code>data/OralCancer/cancer/</code> and <code>data/OralCancer/non-cancer/</code></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Run the notebook</h4>
+          <div class="code-block">jupyter notebook notebook/oral_cancer_detection.ipynb</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- FUTURE -->
+  <div class="section">
+    <div class="section-title">🚀 Future Improvements</div>
+    <div class="section-subtitle">Planned enhancements for better performance and usability</div>
+    <ul class="future-list">
+      <li>Apply transfer learning (EfficientNetV2, ResNet50) for better performance on small datasets</li>
+      <li>Add Grad-CAM heatmaps for model interpretability and clinical trust</li>
+      <li>Implement Early Stopping and ReduceLROnPlateau callbacks</li>
+      <li>Fine-tune ViT with pre-trained weights from ImageNet (vit-b16)</li>
+      <li>Evaluate using AUC-ROC, F1-score, and Precision-Recall curves</li>
+      <li>Deploy as a web app using Streamlit or Flask for clinical use</li>
+    </ul>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Built by <strong>Manideep</strong> — Software Engineer | RPA → Python/ML</p>
+    <div class="footer-links">
+      <a href="https://github.com/your-username/oral-cancer-detection">📂 GitHub Repository</a>
+      <a href="https://www.linkedin.com/in/your-profile">💼 LinkedIn</a>
+      <a href="https://www.kaggle.com">📓 Kaggle Notebook</a>
+    </div>
+    <p style="margin-top:16px; opacity:0.5; font-size:12px;">MIT License · 2024</p>
+  </footer>
+
+</body>
+</html>
