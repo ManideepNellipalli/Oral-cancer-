@@ -14,8 +14,7 @@
 ## 🌐 Live Demo
 
 > [Live Demo](https://manideepnellipalli.github.io/Oral-cancer-/)
->
-> *(Replace `your-username` with your actual GitHub username after deployment — see [Deployment](#-deployment) section)*
+
 
 The live demo hosts an interactive HTML summary of the project including model architecture diagrams, training curves, and sample predictions — viewable directly in the browser without any installation.
 
@@ -198,64 +197,6 @@ Or open directly on [Kaggle](https://www.kaggle.com) for GPU-accelerated trainin
 
 > **Note:** High training accuracy vs lower validation accuracy indicates mild overfitting — expected for a 131-image dataset. Class weights mitigated class imbalance.
 
----
-
-## 🚀 Deployment
-
-### GitHub Pages (Live Demo)
-
-This project uses the `docs/` folder method for GitHub Pages deployment.
-
-#### Step 1 — Create the `docs/` folder
-
-Add an `index.html` inside `docs/` summarizing the project. A minimal template:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Oral Cancer Detection</title>
-</head>
-<body>
-  <h1>Oral Cancer Detection — CNN & ViT</h1>
-  <p>Binary classification of oral cancer from clinical images.</p>
-  <img src="assets/images/training_curves.png" alt="Training Curves" width="700">
-  <img src="assets/images/confusion_matrix.png" alt="Confusion Matrix" width="500">
-</body>
-</html>
-```
-
-#### Step 2 — Push to GitHub
-
-```bash
-git add docs/
-git commit -m "Add GitHub Pages demo site"
-git push origin main
-```
-
-#### Step 3 — Enable GitHub Pages
-
-1. Go to your repository on GitHub
-2. Click **Settings → Pages**
-3. Under **Source**, select **Deploy from a branch**
-4. Branch: `main` | Folder: `/docs`
-5. Click **Save**
-
-Your site will be live at:
-```
-https://your-username.github.io/oral-cancer-detection
-```
-
-#### ⚠️ What GitHub Pages Can and Cannot Do
-
-| ✅ Supported | ❌ Not Supported |
-|---|---|
-| Static HTML/CSS/JS pages | Running Python / TensorFlow inference |
-| Embedding saved images and plots | Live model predictions in browser |
-| Linking to Kaggle/Colab notebooks | Jupyter notebooks rendered natively |
-
-**Recommended:** Export your key plots as `.png` files from the notebook and embed them in `index.html`. Link to the Kaggle notebook or Google Colab for the full runnable version.
 
 ---
 
@@ -276,9 +217,9 @@ https://your-username.github.io/oral-cancer-detection
 **Manideep**
 - 💼 Software Engineer | RPA & Python Developer
 - 🏢 QBotica, Chennai, India
-- 🔗 [LinkedIn](https://www.linkedin.com/in/your-linkedin)
-- 🐙 [GitHub](https://github.com/your-username)
-- 📧 your.email@example.com
+- 🔗 [LinkedIn](https://www.linkedin.com/in/manideep-nellipalli-3a33b5270/)
+- 🐙 [GitHub](https://github.com/ManideepNellipalli)
+- 📧 manideepnellipalli1@gmail.com
 
 ---
 
