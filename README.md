@@ -13,7 +13,7 @@
 
 ## 🌐 Live Demo
 
-> **GitHub Pages Demo:** [https://your-username.github.io/oral-cancer-detection](https://manideepnellipalli.github.io/Oral-cancer-/)
+> [Live Demo](https://manideepnellipalli.github.io/Oral-cancer-/)
 >
 > *(Replace `your-username` with your actual GitHub username after deployment — see [Deployment](#-deployment) section)*
 
